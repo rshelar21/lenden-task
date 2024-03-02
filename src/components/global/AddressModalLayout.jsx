@@ -10,15 +10,28 @@ import {
 } from "firebase/firestore";
 import db from "../../lib/firebase";
 import { SuccessToast, ErrorToast } from "../../utils/index";
+import {useFormik} from "formik"
+import * as yup from 'yup';
 
-const initialState = {
-  address: "",
-  city: "",
-  state: "",
-  zipcode: "",
-};
+const validationSchema = yup.object().shape({
+  address: yup.string().required("Address is required"),
+  city: yup.string().required("City is required"),
+  state: yup.string().required("State is required"),
+  zipcode: yup.number().positive().min(6 , "Incorrect Zipcode").required("Zipcode is required"),
+})
+
+
+// const initialState = {
+//   address: "",
+//   city: "",
+//   state: "",
+//   zipcode: "",
+// };
+
+
+
 const AddressModalLayout = ({ openModal, setOpenModal, updateAddres }) => {
-  const [formState, setFormState] = useState(initialState);
+  const [formState, setFormState] = useState({}); //initialState
   console.log(updateAddres);
 
   useEffect(() => {
@@ -35,47 +48,23 @@ const AddressModalLayout = ({ openModal, setOpenModal, updateAddres }) => {
     }
   }, [updateAddres]);
 
-  const handleOnChange = (e) => {
-    setFormState((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
-  const handleValidation = () => {
-    if (  
-      !formState.address.trim() ||
-      !formState.city.trim() ||
-      !formState.state.trim() ||
-      !formState.zipcode.trim()
-      ) {
-      ErrorToast("All fields are required");
-      return false;
-    }
-    return true;
-  }
 
-  const handleSubmitForm = async (e) => {
-    e.preventDefault();
-    console.log(formState);
-    if (!handleValidation()) return;
+
+  const handleSubmitForm = async (values) => {
     try {
       if(updateAddres && updateAddres.type === "update"){
         const res = await updateDoc(doc(db, "posts", updateAddres.id), {
-          address: formState.address,
-          city: formState.city,
-          state: formState.state,
-          zipcode: formState.zipcode,
+          ...values,
           updatedAt: serverTimestamp(),
         });
-        console.log(res);
         handleCloseModal();
         SuccessToast("Address updated successfully");
         return;
       }
       const collectionRef = collection(db, "posts");
       const docRef = await addDoc(collectionRef, {
-        ...formState,
+        ...values,
         createdAt: serverTimestamp(),
       });
       handleCloseModal();
@@ -89,6 +78,26 @@ const AddressModalLayout = ({ openModal, setOpenModal, updateAddres }) => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const formikInstance = useFormik({
+    initialValues : {
+      address: updateAddres.address || "",
+      city: updateAddres.city || "",
+      state: updateAddres.state || "",
+      zipcode: updateAddres.zipcode || "",
+    },
+    enableReinitialize: true,
+    validationSchema : validationSchema,
+    onSubmit : async(values, { resetForm }) => {
+      console.log(values);
+      await handleSubmitForm(values);
+    }
+  })
+
+  // const {
+  //   handleSubmit,
+  //   handleChange,
+  // } = formikInstance;
 
   return (
     <>
@@ -104,34 +113,46 @@ const AddressModalLayout = ({ openModal, setOpenModal, updateAddres }) => {
             <IoMdClose />
           </div>
           <div className="flex flex-col gap-y-2">
-            <form action="" onSubmit={handleSubmitForm}>
+            <form onSubmit={formikInstance.handleSubmit}>
               <InputWrapper
                 type="text"
                 name="address"
                 label="Address"
-                value={formState.address}
-                handleOnChange={handleOnChange}
+                value={formikInstance.values.address}
+                handleOnChange={formikInstance.handleChange}
+                onBlur={formikInstance.handleBlur}
+                error={formikInstance.errors.address}
+                touched={formikInstance.touched.address}
               />
               <InputWrapper
                 type="text"
                 name="city"
                 label="City"
-                value={formState.city}
-                handleOnChange={handleOnChange}
+                value={formikInstance.values.city}
+                handleOnChange={formikInstance.handleChange}
+                onBlur={formikInstance.handleBlur}
+                error={formikInstance.errors.city}
+                touched={formikInstance.touched.city}
               />
               <InputWrapper
                 type="text"
                 name="state"
                 label="State"
-                value={formState.state}
-                handleOnChange={handleOnChange}
+                value={formikInstance.values.state}
+                handleOnChange={formikInstance.handleChange}
+                onBlur={formikInstance.handleBlur}
+                error={formikInstance.errors.state}
+                touched={formikInstance.touched.state}
               />
               <InputWrapper
                 type="number"
                 name="zipcode"
                 label="Zipcode"
-                value={formState.zipcode}
-                handleOnChange={handleOnChange}
+                value={formikInstance.values.zipcode}
+                handleOnChange={formikInstance.handleChange}
+                onBlur={formikInstance.handleBlur}
+                error={formikInstance.errors.zipcode}
+                touched={formikInstance.touched.zipcode}
               />
 
               <button

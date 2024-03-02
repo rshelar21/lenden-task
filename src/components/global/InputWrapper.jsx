@@ -1,6 +1,16 @@
 import React from "react";
+import { ErrorMessage } from "formik";
 
-const InputWrapper = ({ type, name, label, value, handleOnChange }) => {
+const InputWrapper = ({
+  type,
+  name,
+  label,
+  value,
+  handleOnChange,
+  onBlur,
+  error,
+  touched
+}) => {
   return (
     <>
       <div className="">
@@ -14,8 +24,9 @@ const InputWrapper = ({ type, name, label, value, handleOnChange }) => {
           name={name}
           value={value}
           onChange={handleOnChange}
-          required
+          onBlur={onBlur}
         />
+        {error && touched && <span className="text-sm text-red-500">{error}</span>}
       </div>
     </>
   );
