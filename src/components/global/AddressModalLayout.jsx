@@ -21,35 +21,8 @@ const validationSchema = yup.object().shape({
 })
 
 
-// const initialState = {
-//   address: "",
-//   city: "",
-//   state: "",
-//   zipcode: "",
-// };
-
-
 
 const AddressModalLayout = ({ openModal, setOpenModal, updateAddres }) => {
-  const [formState, setFormState] = useState({}); //initialState
-  console.log(updateAddres);
-
-  useEffect(() => {
-    if (updateAddres && updateAddres.type === "update") {
-      setFormState((prev) => {
-        return {
-          ...prev,
-          address: updateAddres.address,
-          city: updateAddres.city,
-          state: updateAddres.state,
-          zipcode: updateAddres.zipcode,
-        };
-      });
-    }
-  }, [updateAddres]);
-
-
-
 
   const handleSubmitForm = async (values) => {
     try {
