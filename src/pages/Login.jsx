@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, provider } from "../lib/firebase";
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import { SuccessToast, ErrorToast } from "../utils/index";
+
 
 const Login = () => {
     const navigate = useNavigate();
@@ -10,8 +12,10 @@ const Login = () => {
       .then((result) => {
         console.log(result.user);
         navigate("/");
+        SuccessToast("Login successfully");
       })
       .catch((error) => {
+        ErrorToast("Error in login");
         console.log(error.message);
       });
   };

@@ -9,6 +9,7 @@ import {
   doc,
 } from "firebase/firestore";
 import db from "../../lib/firebase";
+import { SuccessToast, ErrorToast } from "../../utils/index";
 
 const initialState = {
   address: "",
@@ -41,9 +42,23 @@ const AddressModalLayout = ({ openModal, setOpenModal, updateAddres }) => {
     }));
   };
 
+  const handleValidation = () => {
+    if (  
+      !formState.address.trim() ||
+      !formState.city.trim() ||
+      !formState.state.trim() ||
+      !formState.zipcode.trim()
+      ) {
+      ErrorToast("All fields are required");
+      return false;
+    }
+    return true;
+  }
+
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     console.log(formState);
+    if (!handleValidation()) return;
     try {
       if(updateAddres && updateAddres.type === "update"){
         const res = await updateDoc(doc(db, "posts", updateAddres.id), {
@@ -55,6 +70,7 @@ const AddressModalLayout = ({ openModal, setOpenModal, updateAddres }) => {
         });
         console.log(res);
         handleCloseModal();
+        SuccessToast("Address updated successfully");
         return;
       }
       const collectionRef = collection(db, "posts");
@@ -63,8 +79,10 @@ const AddressModalLayout = ({ openModal, setOpenModal, updateAddres }) => {
         createdAt: serverTimestamp(),
       });
       handleCloseModal();
+      SuccessToast("Address added successfully");
     } catch (error) {
       console.log(error);
+      ErrorToast("Something went wrong");
     }
   };
 

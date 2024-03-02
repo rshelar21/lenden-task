@@ -15,6 +15,8 @@ import {
 } from "firebase/firestore";
 import db from "../lib/firebase";
 import AddressCard from "../components/home/AddressCard";
+import { SuccessToast, ErrorToast } from "../utils/index";
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -52,8 +54,10 @@ const Home = () => {
     try {
       const res = await deleteDoc(doc(db, "posts", id));
       console.log(res);
+      SuccessToast("Address deleted successfully");
     } catch (error) {
       console.log(error);
+      ErrorToast("Error in deleting address");
     }
   };
 
