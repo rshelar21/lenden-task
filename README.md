@@ -1,8 +1,37 @@
-# React + Vite
+# Address Updater Project Assessment
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+Address update application designed to manage addresses efficiently. It offers functionalities for adding, editing, deleting, and updating address information. This assessment evaluates the project's functionality, user interface, error handling, and additional considerations.
 
-Currently, two official plugins are available:
+## Functionality Assessment
+### Add
+- Users can add new addresses, city, state, zip code.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Edit
+- Users can edit the address in real time.
+
+## Delete
+- Users can delete the address.
+
+### Edit
+- Users can edit addresses in real time.
+
+## User Interface (UI)
+- User interface is easy to use.
+- Added Google login functionality.
+- Data is presented clearly.
+
+## Error Handling
+- **For error handling**, Formik and Yup packages are used.
+- **Recovery Mechanisms:** There are mechanisms to recover from invalid inputs or unexpected errors, though enhancing these could improve user experience.
+
+## Strengths
+- Easy to use app.
+- Added Google Login feature.
+- Real-time data fetching.
+- Better Error handling.
+- Toast Messages added
+
+## Conclusion
+Address update application designed to manage addresses efficiently. 
+
